@@ -27,7 +27,7 @@ def main():
         print "\nAborting."
         exit(1)
     except HTTPError as e:
-        if e.json.get('detail'):
+        if e.json and e.json.get('detail'):
             print "API error: %s" % e.json['detail']
             print "See %s for more detail" % command.log_file_path
         else:
