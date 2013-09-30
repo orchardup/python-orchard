@@ -10,6 +10,9 @@ import threading
 import time
 import errno
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class SocketClient:
     def __init__(self, socket, interactive, keep_running, raw=True):
@@ -18,6 +21,7 @@ class SocketClient:
         self.keep_running = keep_running
         self.raw = raw
         self.stdin_fileno = sys.stdin.fileno()
+        self.recv_thread = None
 
     def __enter__(self):
         self.create()
@@ -48,21 +52,24 @@ class SocketClient:
             thread.daemon = True
             thread.start()
 
-        thread = threading.Thread(target=self.recv_ws)
-        thread.daemon = True
-        thread.start()
+        self.recv_thread = threading.Thread(target=self.recv_ws)
+        self.recv_thread.daemon = True
+        self.recv_thread.start()
 
         self.alive_check()
 
     def recv_ws(self):
-        while True:
-            chunk = self.socket.recv()
+        try:
+            while True:
+                chunk = self.socket.recv()
 
-            if chunk:
-                sys.stdout.write(chunk)
-                sys.stdout.flush()
-            else:
-                break
+                if chunk:
+                    sys.stdout.write(chunk)
+                    sys.stdout.flush()
+                else:
+                    break
+        except Exception, e:
+            log.debug(e)
 
     def send_ws(self):
         while True:
@@ -85,6 +92,10 @@ class SocketClient:
     def alive_check(self):
         while True:
             time.sleep(1)
+
+            if not self.recv_thread.is_alive():
+                sys.stderr.write("Connection closed by server\r\n")
+                break
 
             if not self.keep_running():
                 break
