@@ -19,7 +19,7 @@ def with_username_and_password(username, password):
     client = Client(base_url(), docker_host())
 
     try:
-        client.token = client.request("POST", "/signin", data={"username": username, "password": password})["token"]
+        client.token = client.request("POST", "/signin", data={"username": username, "password": password}, quiet=True)["token"]
         client.bootstrap()
         return client
     except BadRequest:

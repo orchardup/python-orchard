@@ -33,7 +33,7 @@ class Client(object):
         log.debug("Connecting to Docker API at %s", docker_url)
         return DockerClient(base_url=docker_url, auth_token=self.token, version="1.5")
 
-    def request(self, method, path_or_url, headers=None, **kwargs):
+    def request(self, method, path_or_url, quiet=False, headers=None, **kwargs):
         if headers is None:
             headers = {}
 
@@ -44,10 +44,14 @@ class Client(object):
             headers["User-Agent"] = "orchard/%s" % orchard.__version__
 
         req = requests.Request(method, url, headers=headers, **kwargs).prepare()
-        log.debug(request_to_curl_command(req))
+
+        if not quiet:
+            log.debug(request_to_curl_command(req))
 
         res = requests.sessions.Session().send(req)
-        log.debug('%s %s' % (res.status_code, res.text))
+
+        if not quiet:
+            log.debug('%s %s' % (res.status_code, res.text))
 
         json = None
         try:
