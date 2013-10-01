@@ -67,8 +67,10 @@ def prettydate(d):
         return '{0} hours ago'.format(s/3600)
 
 
-def mkdir(path):
+def mkdir(path, permissions=0700):
     if not os.path.exists(path):
         os.mkdir(path)
+
+    os.chmod(path, permissions)
 
     return path
