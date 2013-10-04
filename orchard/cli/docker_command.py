@@ -299,9 +299,8 @@ class DockerCommand(Command):
             mem_limit=mem_limit
         )
 
-        self.docker.start(container['Id'], binds=binds)
-
         if options['-d']:
+            self.docker.start(container['Id'], binds=binds)
             print container['Id']
         else:
             with self._attach_to_container(
@@ -310,6 +309,7 @@ class DockerCommand(Command):
                 logs=True,
                 raw=options['-t']
             ) as c:
+                self.docker.start(container['Id'], binds=binds)
                 c.run()
 
     def start(self, options):
