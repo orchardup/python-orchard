@@ -2,7 +2,7 @@
 
 set -xe
 
-if [ -n $1 ] ; then
+if [ -z "$1" ]; then
     echo 'pass a version as first argument'
     exit 1
 fi
