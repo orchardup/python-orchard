@@ -65,11 +65,12 @@ class DockerCommand(Command):
         """
         container_id = options['CONTAINER']
         container_info = self.docker.inspect_container(container_id)
-        self._attach_to_container(
+        with self._attach_to_container(
             container_id,
             interactive=container_info["Config"]["AttachStdin"],
             raw=container_info["Config"]["Tty"]
-        )
+        ) as c:
+            c.run()
 
     def cp(self, options):
         """
@@ -141,7 +142,8 @@ class DockerCommand(Command):
         Usage: logs CONTAINER
         """
         container_id = options['CONTAINER']
-        self._attach_to_container(container_id, interactive=False, logs=True, stream=False)
+        with self._attach_to_container(container_id, interactive=False, logs=True, stream=False) as c:
+            c.run()
 
     def ps(self, options):
         """
@@ -302,12 +304,13 @@ class DockerCommand(Command):
         if options['-d']:
             print container['Id']
         else:
-            self._attach_to_container(
+            with self._attach_to_container(
                 container['Id'],
                 interactive=options['-i'],
                 logs=True,
                 raw=options['-t']
-            )
+            ) as c:
+                c.run()
 
     def start(self, options):
         """
@@ -378,8 +381,7 @@ class DockerCommand(Command):
 
         keep_running = lambda: self.docker.inspect_container(container_id)['State']['Running']
 
-        with SocketClient(socket, interactive=interactive, raw=raw, keep_running=keep_running) as c:
-            c.run()
+        return SocketClient(socket, interactive=interactive, raw=raw, keep_running=keep_running)
 
 
 def catch_api_error(fn, success_message=None):
