@@ -7,6 +7,7 @@ import re
 from docopt import docopt
 from inspect import getdoc
 
+from .. import __version__
 from .command import Command
 from .apps_command import AppsCommand
 from .docker_command import DockerCommand
@@ -59,8 +60,9 @@ class TopLevelCommand(Command):
       orchard -h|--help
 
     Options:
-      --verbose            Show more output
       -a APP, --app APP    Specify the Orchard app to run against (required for 'docker')
+      --verbose            Show more output
+      --version            Print version and exit
 
     """
 
@@ -68,7 +70,12 @@ class TopLevelCommand(Command):
     docker = DockerCommand()
 
     def sys_dispatch(self):
-        options = docopt(getdoc(self), sys.argv[1:], options_first=True)
+        options = docopt(
+            getdoc(self),
+            sys.argv[1:],
+            options_first=True,
+            version=__version__
+        )
 
         command = 'apps' if options['apps'] else 'docker'
         handler = getattr(self, command)
