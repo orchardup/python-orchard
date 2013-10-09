@@ -121,7 +121,7 @@ class DockerCommand(Command):
                 sys.stderr.write("No such container or image: %s\n" % identifier)
                 exit(1)
 
-        print json.dumps(array)
+        print json.dumps(array, indent=4)
 
     def kill(self, options):
         """
