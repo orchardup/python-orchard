@@ -359,7 +359,7 @@ class DockerCommand(Command):
 
         Usage: version
         """
-        client_version = "0.0.1"
+        client_version = "0.6.4"
         docker_version = self.docker.version()
 
         print "Client version:", client_version
