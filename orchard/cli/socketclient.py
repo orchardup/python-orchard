@@ -94,7 +94,6 @@ class SocketClient:
             time.sleep(1)
 
             if not self.recv_thread.is_alive():
-                sys.stderr.write("Connection closed by server\r\n")
                 break
 
             if not self.keep_running():
