@@ -35,6 +35,8 @@ class DockerClient(docker.Client):
 
         return socket
 
-    def replace_container(self, container_id, config):
+    def replace_container(self, container_id, *args, **kwargs):
+        config = self._container_config(*args, **kwargs)
         u = self._url("/containers/create?replaceContainer={0}".format(container_id))
         return self._result(self._post_json(u, config), json=True)
+

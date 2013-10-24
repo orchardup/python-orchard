@@ -178,11 +178,21 @@ class DockerCommand(Command):
         """
         Replace a running container with a new one, using the specified image
 
-        Usage: replace CONTAINER IMAGE
+        Usage: replace [options] [-e VAR=VAL...] CONTAINER IMAGE [COMMAND] [ARG...]
+
+        Options:
+            -e VAR=VAL  Set an environment variable (can be used multiple times)
+            -p PORT     Expose a container's port to the host
         """
         print "Pulling image %s" % options['IMAGE']
 
-        new_container = self.docker.replace_container(options['CONTAINER'], {'Image': options['IMAGE']})
+        new_container = self.docker.replace_container(
+            options['CONTAINER'],
+            options['IMAGE'],
+            ([options['COMMAND']] + options['ARG']) if options['COMMAND'] else [],
+            environment=options['-e'],
+            ports=self._get_ports(options),
+        )
         new_container = self.docker.inspect_container(new_container['Id'])
 
         binds = {}
@@ -228,6 +238,15 @@ class DockerCommand(Command):
                 "Removed %s" % container_id
             )
 
+    def _get_ports(self, options):
+        if options['-p']:
+            if re.search('^\d+(:\d+)?$', options['-p']):
+                return [options['-p']]
+            else:
+                sys.stderr.write("The -p argument must be of the format XXX or XXX:YYY.\n")
+                exit(1)
+
+
     def run(self, options):
         """
         Run a command in a new container.
@@ -245,14 +264,7 @@ class DockerCommand(Command):
             -v PATH     Mount a volume at the specified path (e.g. /var/lib/mysql)
         """
 
-        ports = None
-
-        if options['-p']:
-            if re.search('^\d+(:\d+)?$', options['-p']):
-                ports = [options['-p']]
-            else:
-                sys.stderr.write("The -p argument must be of the format XXX or XXX:YYY.\n")
-                exit(1)
+        ports = self._get_ports(options)
 
         # Volumes
         binds = None
