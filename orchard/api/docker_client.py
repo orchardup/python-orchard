@@ -40,3 +40,19 @@ class DockerClient(docker.Client):
         u = self._url("/containers/create?replaceContainer={0}".format(container_id))
         return self._result(self._post_json(u, config), json=True)
 
+    def logs(self, container):
+        if isinstance(container, dict):
+            container = container.get('Id')
+        params = {
+            'logs': 1,
+            'stdout': 1,
+            'stderr': 1
+        }
+        socket = self.attach_websocket(container, params)
+        out = []
+        while True:
+            c = socket.recv()
+            if c is None:
+                break
+            out.append(c)
+        return ''.join(out)
