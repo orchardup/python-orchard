@@ -19,10 +19,8 @@ Authenticating
 The `orchard.api` package provides two methods for instantiating an API client:
 
     >>> import orchard.api
-
     >>> orchard.api.with_token(my_token)
     <orchard.api.client.Client object at 0x101de0d10>
-
     >>> orchard.api.with_username_and_password(my_username, my_password)
     <orchard.api.client.Client object at 0x102244e10>
 
@@ -33,18 +31,13 @@ Once you've instaniated a `Client` object, the `apps` property lets you list, cr
 
     >>> client.apps
     [<App: app1>, <App: app2>]
-
     >>> client.apps[0]
     <App: app1>
-
     >>> client.apps["app2"]
     <App: app2>
-
     >>> app3 = client.apps.create({"name": "app3"})
-
     >>> app3
     <App: app3>
-
     >>> app3.delete()
 
 Interacting with Docker
@@ -53,20 +46,14 @@ Interacting with Docker
 To get a [docker-py] instance for an app, call `client.docker(app_name)`:
 
     >>> docker = client.docker("app1")
-
     >>> docker.containers()
     []
-
     >>> c = docker.create_container("ubuntu", "date")
-
     >>> docker.start(c['Id'])
-    
     >>> docker.wait(c['Id'])
     0
-
     >>> docker.logs(c['Id'])
     'Mon Oct 28 15:42:56 UTC 2013\n'
-    
     >>> docker.remove_container(c['Id'])
 
 Consult the [docker-py] README for a full list of methods. Orchard does not currently support all of the methods that Docker supports though. See the [Orchard API docs] for a list of what is not supported.
