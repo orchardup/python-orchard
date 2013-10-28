@@ -54,37 +54,24 @@ To get a [docker-py] instance for an app, call `client.docker(app_name)`:
 
     >>> docker = client.docker("app1")
 
-    >>> docker
-    <orchard.api.docker_client.DockerClient object at 0x1022a4e50>
-
     >>> docker.containers()
     []
 
-    >>> c = docker.create_container("ubuntu", "touch /file.txt")
-
-    >>> docker.inspect_container(c['Id'])
-    {
-        u'ID': u'8d1ade26b2b50026a74a5bc55dbe9131fdbd17b1311b512568913e9b84f01209',
-        u'Image': u'8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c',
-        u'Path': u'touch',
-        u'Args': [u'/file.txt'],
-        u'State': {...},
-        u'Config': {...},
-        u'NetworkSettings': {...},
-        ...
-    }
+    >>> c = docker.create_container("ubuntu", "date")
 
     >>> docker.start(c['Id'])
+    
+    >>> docker.wait(c['Id'])
+    0
 
-    >>> docker.diff(c['Id'])
-    [
-        {u'Path': u'/dev', u'Kind': 0},
-        {u'Path': u'/dev/kmsg', u'Kind': 1},
-        {u'Path': u'/file.txt', u'Kind': 1}
-    ]
+    >>> docker.logs(c['Id'])
+    'Mon Oct 28 15:42:56 UTC 2013\n'
+    
+    >>> docker.remove_container(c['Id'])
 
-Consult the [docker-py] README for a full list of methods.
+Consult the [docker-py] README for a full list of methods. Orchard does not currently support all of the methods that Docker supports though. See the [Orchard API docs] for a list of what is not supported.
 
 [Orchard]: https://orchardup.com
 [docker-py]: https://github.com/dotcloud/docker-py
 [CLI docs]: https://orchardup.com/docs/cli
+[Orchard API docs]: https://orchardup.com/docs/api
