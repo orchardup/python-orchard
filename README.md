@@ -10,6 +10,13 @@ Install
 $ pip install orchard
 ```
 
+Upgrading to the latest version
+-------------------------------
+
+```bash
+$ pip install -U orchard
+```
+
 Command-line client
 -------------------
 
