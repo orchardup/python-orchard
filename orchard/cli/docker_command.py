@@ -149,30 +149,37 @@ class DockerCommand(Command):
         """
         List containers.
 
-        Usage: ps
+        Usage: ps [options]
+
+        Options:
+            -q    Only display IDs
         """
         containers = self.docker.containers()
 
-        headers = ["ID", "Image", "Command", "Created", "Status", "IP Address", "Ports"]
+        if options['-q']:
+            for container in containers:
+                print container['Id'][:10]
+        else:
+            headers = ["ID", "Image", "Command", "Created", "Status", "IP Address", "Ports"]
 
-        for c in containers:
-            if c['Ports']:
-                mapping = c['Ports'][0]
-                c['Ports'] = '%s->%s' % (mapping['PublicPort'], mapping['PrivatePort'])
-            else:
-                c['Ports'] = ''
+            for c in containers:
+                if c['Ports']:
+                    mapping = c['Ports'][0]
+                    c['Ports'] = '%s->%s' % (mapping['PublicPort'], mapping['PrivatePort'])
+                else:
+                    c['Ports'] = ''
 
-        rows = [[
-            c['Id'][0:10],
-            c['Image'],
-            c['Command'][0:20],
-            prettydate(datetime.utcfromtimestamp(c['Created'])),
-            c['Status'],
-            c.get('ExternalIPAddress', ''),
-            c['Ports']
-        ] for c in containers]
+            rows = [[
+                c['Id'][0:10],
+                c['Image'],
+                c['Command'][0:20],
+                prettydate(datetime.utcfromtimestamp(c['Created'])),
+                c['Status'],
+                c.get('ExternalIPAddress', ''),
+                c['Ports']
+            ] for c in containers]
 
-        print self.formatter.table(headers, rows)
+            print self.formatter.table(headers, rows)
 
     def replace(self, options):
         """
