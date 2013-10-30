@@ -259,7 +259,9 @@ class DockerCommand(Command):
             -i          Attach this terminal's stdin to the running process
             -m BYTES    Amount of memory, rounded to nearest Orchard container size
                         (in bytes with SI suffix) [default: 512M]
-            -p PORT     Expose a container's port to the host
+            -p PORT     Expose a container's port to the host. In the format 
+                        public:private. If the public port is omitted, a random
+                        port will be assigned.
             -t          Allocate a pseudo-tty
             -v PATH     Mount a volume at the specified path (e.g. /var/lib/mysql)
         """
