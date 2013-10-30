@@ -269,7 +269,6 @@ class DockerCommand(Command):
         ports = self._get_ports(options)
 
         # Volumes
-        binds = None
         volumes = None
 
         if options['-v']:
@@ -279,7 +278,6 @@ class DockerCommand(Command):
                 sys.stderr.write("HOST:CONTAINER path format is not currently supported - you can only specify the container path.\n")
                 exit(1)
 
-            binds = {"":path}
             volumes = {path:{}}
 
         if options['IMAGE'] != 'ubuntu':
@@ -313,17 +311,24 @@ class DockerCommand(Command):
             mem_limit=mem_limit
         )
 
+        container = self.docker.inspect_container(container['Id'])
+
+        binds = {}
+        if container['Config'].get('Volumes'):
+            for (path, _) in container['Config']['Volumes'].items():
+                binds[""] = path
+
         if options['-d']:
-            self.docker.start(container['Id'], binds=binds)
-            print container['Id']
+            self.docker.start(container['ID'], binds=binds)
+            print container['ID'][:10]
         else:
             with self._attach_to_container(
-                container['Id'],
+                container['ID'],
                 interactive=options['-i'],
                 logs=True,
                 raw=options['-t']
             ) as c:
-                self.docker.start(container['Id'], binds=binds)
+                self.docker.start(container['ID'], binds=binds)
                 c.run()
 
     def start(self, options):
