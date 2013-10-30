@@ -1,6 +1,13 @@
 Change log
 ==========
 
+1.0.3 – 2013-10-30
+------------------
+
+ - Volumes specified in a Dockerfile will now be created as volumes
+   on Orchard. Previously, you had to specify them with a `-v` option
+   to `docker run`.
+
 1.0.2 – 2013-10-28
 ------------------
 
