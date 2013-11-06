@@ -34,12 +34,12 @@ setup(
     include_package_data=True,
     install_requires=[
         'docopt==0.6.1',
-        'docker-py==0.2.0-orchard',
+        'docker-py==0.2.0-orchard1',
         'requests==2.0.1',
         'texttable==0.8.1',
     ],
     dependency_links=[
-        'https://github.com/aanand/docker-py/tarball/3af6f8cc040c5b9e94d952519c36eb54130b7008#egg=docker-py-0.2.0-orchard',
+        'https://github.com/aanand/docker-py/tarball/327eb9000ad8c4ba8da6dd0faf2f37c34cc28e38#egg=docker-py-0.2.0-orchard1',
     ],
     entry_points="""
     [console_scripts]
