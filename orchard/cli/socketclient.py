@@ -31,7 +31,10 @@ class SocketClient:
         self.destroy()
 
     def create(self):
-        self.settings = termios.tcgetattr(sys.stdin.fileno())
+        if os.isatty(sys.stdin.fileno()):
+            self.settings = termios.tcgetattr(sys.stdin.fileno())
+        else:
+            self.settings = None
 
         if self.interactive:
             self.set_blocking(sys.stdin, False)
@@ -100,7 +103,9 @@ class SocketClient:
                 break
 
     def destroy(self):
-        termios.tcsetattr(self.stdin_fileno, termios.TCSADRAIN, self.settings)
+        if self.settings is not None:
+            termios.tcsetattr(self.stdin_fileno, termios.TCSADRAIN, self.settings)
+
         sys.stdout.flush()
 
 if __name__ == '__main__':
