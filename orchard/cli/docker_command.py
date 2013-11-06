@@ -394,7 +394,7 @@ class DockerCommand(Command):
         print "Go version:", docker_version["GoVersion"]
 
     def _attach_to_container(self, container_id, interactive, logs=False, stream=True, raw=False):
-        socket = self.docker.attach_websocket(
+        socket = self.docker.attach_socket(
             container_id,
             params={
                 'stdin': 1 if interactive else 0,
@@ -402,7 +402,8 @@ class DockerCommand(Command):
                 'stderr': 1,
                 'logs': 1 if logs else 0,
                 'stream': 1 if stream else 0
-            }
+            },
+            ws=True,
         )
 
         keep_running = lambda: self.docker.inspect_container(container_id)['State']['Running']
