@@ -84,7 +84,7 @@ class SocketClient:
                 if chunk == '':
                     self.socket.send_close()
                     break
-                elif self.interactive:
+                else:
                     try:
                         self.socket.send(chunk)
                     except Exception, e:
@@ -92,8 +92,6 @@ class SocketClient:
                             break
                         else:
                             raise e
-                elif chunk == '\x03':
-                    raise KeyboardInterrupt()
 
     def alive_check(self):
         while True:
