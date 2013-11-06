@@ -1,6 +1,12 @@
 Change log
 ==========
 
+1.0.4 — 2013-11-06
+------------------
+
+ - `docker attach` no longer crashes when stdin is not a TTY
+ - `docker attach` no longer hangs when stdin is closed
+
 1.0.3 – 2013-10-30
 ------------------
 
