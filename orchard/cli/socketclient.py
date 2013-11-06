@@ -81,7 +81,10 @@ class SocketClient:
             if r:
                 chunk = sys.stdin.read(1)
 
-                if self.interactive:
+                if chunk == '':
+                    self.socket.send_close()
+                    break
+                elif self.interactive:
                     try:
                         self.socket.send(chunk)
                     except Exception, e:
