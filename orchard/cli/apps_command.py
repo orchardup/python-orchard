@@ -41,11 +41,16 @@ class AppsCommand(Command):
         Create a new app.
         Usage: create NAME
         """
-        # TODO: handle invalid or clashing app name
         try:
             app = self.api.apps.create({"name": options['NAME']})
         except BadRequest as e:
-            log.error(e.json)
+            name_errors = e.json.get('name', None)
+
+            if name_errors:
+                log.error("\n".join(name_errors))
+            else:
+                log.error(e.json)
+
             sys.exit(1)
         log.info("Created %s", app.name)
 
