@@ -8,6 +8,9 @@ from ..api.errors import AuthenticationFailed
 from .errors import UserError
 from .utils import mkdir
 
+import logging
+log = logging.getLogger(__name__)
+
 
 class Authenticator(object):
     def __init__(self, token_dir):
@@ -22,7 +25,7 @@ class Authenticator(object):
             try:
                 return api.with_token(stored_token)
             except AuthenticationFailed:
-                print "Oh dear, looks like your API token has expired. We'll need to log you in again."
+                log.error("Oh dear, looks like your API token has expired. We'll need to log you in again.")
 
         return self.login()
 
@@ -40,7 +43,7 @@ class Authenticator(object):
         except AuthenticationFailed:
             # TODO: pre-fill with previous value
             # http://stackoverflow.com/questions/2533120/show-default-value-for-editing-on-python-input-possible
-            print "Sorry, that doesn't look right. Try again?"
+            log.error("Sorry, that doesn't look right. Try again?")
             return self.login(prompt="Username: ")
 
     def load_token(self):

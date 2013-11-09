@@ -25,22 +25,22 @@ def main():
         command = TopLevelCommand()
         command.sys_dispatch()
     except KeyboardInterrupt:
-        print "\nAborting."
+        log.error("\nAborting.")
         exit(1)
     except HTTPError as e:
         if e.json and e.json.get('detail'):
-            print "API error: %s" % e.json['detail']
-            print "See %s for more detail" % command.log_file_path
+            log.error("API error: %s", e.json['detail'])
+            log.error("See %s for more detail", command.log_file_path)
         else:
-            print "There was an API error - see", command.log_file_path
+            log.error("There was an API error - see %s", command.log_file_path)
         exit(1)
     except UserError, e:
-        print e.msg
+        log.error(e.msg)
         exit(1)
     except NoSuchCommand, e:
-        print "No such command: %s" % e.command
-        print
-        print "\n".join(parse_doc_section("commands:", getdoc(e.supercommand)))
+        log.error("No such command: %s", e.command)
+        log.error("")
+        log.error("\n".join(parse_doc_section("commands:", getdoc(e.supercommand))))
         exit(1)
 
 

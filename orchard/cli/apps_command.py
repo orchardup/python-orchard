@@ -34,7 +34,7 @@ class AppsCommand(Command):
             for app in apps:
                 print app.name
         else:
-            print "You don't have any apps yet. Run \"orchard apps create\" to create one."
+            log.error("You don't have any apps yet. Run \"orchard apps create\" to create one.")
 
     def create(self, options):
         """
@@ -45,7 +45,7 @@ class AppsCommand(Command):
         try:
             app = self.api.apps.create({"name": options['NAME']})
         except BadRequest as e:
-            print e.json
+            log.error(e.json)
             sys.exit(1)
         log.info("Created %s", app.name)
 

@@ -10,6 +10,9 @@ from .command import Command
 from .utils import prettydate
 from .socketclient import SocketClient
 
+import logging
+log = logging.getLogger(__name__)
+
 class DockerCommand(Command):
     """
     Run commands against the Orchard public Docker cloud.
@@ -191,7 +194,7 @@ class DockerCommand(Command):
             -e VAR=VAL  Set an environment variable (can be used multiple times)
             -p PORT     Expose a container's port to the host
         """
-        print "Pulling image %s" % options['IMAGE']
+        log.info("Pulling image %s", options['IMAGE'])
 
         new_container = self.docker.replace_container(
             options['CONTAINER'],
@@ -288,7 +291,7 @@ class DockerCommand(Command):
             volumes = {path:{}}
 
         if options['IMAGE'] != 'ubuntu':
-            print "Pulling image %s" % options['IMAGE']
+            log.info("Pulling image %s", options['IMAGE'])
 
         # Memory limit
         mem_limit = None
