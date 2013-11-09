@@ -15,13 +15,26 @@ log = logging.getLogger(__name__)
 
 
 class SocketClient:
-    def __init__(self, socket, interactive, keep_running, raw=True):
-        self.socket = socket
-        self.interactive = interactive
-        self.keep_running = keep_running
+    def __init__(self,
+        socket_in=None,
+        socket_out=None,
+        socket_err=None,
+        keep_running=None,
+        raw=True,
+    ):
+        self.socket_in = socket_in
+        self.socket_out = socket_out
+        self.socket_err = socket_err
+
+        if keep_running is None:
+            self.keep_running = lambda: True
+        else:
+            self.keep_running = keep_running
+
         self.raw = raw
+
         self.stdin_fileno = sys.stdin.fileno()
-        self.recv_thread = None
+        self.recv_threads = []
 
     def __enter__(self):
         self.create()
@@ -36,9 +49,10 @@ class SocketClient:
         else:
             self.settings = None
 
-        if self.interactive:
+        if self.socket_in is not None:
             self.set_blocking(sys.stdin, False)
             self.set_blocking(sys.stdout, True)
+            self.set_blocking(sys.stderr, True)
 
         if self.raw:
             tty.setraw(sys.stdin.fileno())
@@ -50,43 +64,54 @@ class SocketClient:
         fcntl.fcntl(fd, fcntl.F_SETFL, flags)
 
     def run(self):
-        if self.interactive:
-            thread = threading.Thread(target=self.send_ws)
-            thread.daemon = True
-            thread.start()
+        if self.socket_in is not None:
+            self.start_send_thread(self.socket_in, sys.stdin)
 
-        self.recv_thread = threading.Thread(target=self.recv_ws)
-        self.recv_thread.daemon = True
-        self.recv_thread.start()
+        if self.socket_out is not None:
+            self.start_recv_thread(self.socket_out, sys.stdout)
+
+        if self.socket_err is not None:
+            self.start_recv_thread(self.socket_err, sys.stderr)
 
         self.alive_check()
 
-    def recv_ws(self):
+    def start_send_thread(self, *args):
+        thread = threading.Thread(target=self.send_ws, args=args)
+        thread.daemon = True
+        thread.start()
+
+    def start_recv_thread(self, *args):
+        thread = threading.Thread(target=self.recv_ws, args=args)
+        thread.daemon = True
+        thread.start()
+        self.recv_threads.append(thread)
+
+    def recv_ws(self, socket, stream):
         try:
             while True:
-                chunk = self.socket.recv()
+                chunk = socket.recv()
 
                 if chunk:
-                    sys.stdout.write(chunk)
-                    sys.stdout.flush()
+                    stream.write(chunk)
+                    stream.flush()
                 else:
                     break
         except Exception, e:
             log.debug(e)
 
-    def send_ws(self):
+    def send_ws(self, socket, stream):
         while True:
-            r, w, e = select([sys.stdin.fileno()], [], [])
+            r, w, e = select([stream.fileno()], [], [])
 
             if r:
-                chunk = sys.stdin.read(1)
+                chunk = stream.read(1)
 
                 if chunk == '':
-                    self.socket.send_close()
+                    socket.send_close()
                     break
                 else:
                     try:
-                        self.socket.send(chunk)
+                        socket.send(chunk)
                     except Exception, e:
                         if hasattr(e, 'errno') and e.errno == errno.EPIPE:
                             break
@@ -97,7 +122,7 @@ class SocketClient:
         while True:
             time.sleep(1)
 
-            if not self.recv_thread.is_alive():
+            if not any(t.is_alive() for t in self.recv_threads):
                 break
 
             if not self.keep_running():

@@ -394,11 +394,23 @@ class DockerCommand(Command):
         print "Go version:", docker_version["GoVersion"]
 
     def _attach_to_container(self, container_id, interactive, logs=False, stream=True, raw=False):
-        socket = self.docker.attach_socket(
+        stdio = self.docker.attach_socket(
             container_id,
             params={
                 'stdin': 1 if interactive else 0,
                 'stdout': 1,
+                'stderr': 0,
+                'logs': 1 if logs else 0,
+                'stream': 1 if stream else 0
+            },
+            ws=True,
+        )
+
+        stderr = self.docker.attach_socket(
+            container_id,
+            params={
+                'stdin': 0,
+                'stdout': 0,
                 'stderr': 1,
                 'logs': 1 if logs else 0,
                 'stream': 1 if stream else 0
@@ -408,7 +420,13 @@ class DockerCommand(Command):
 
         keep_running = lambda: self.docker.inspect_container(container_id)['State']['Running']
 
-        return SocketClient(socket, interactive=interactive, raw=raw, keep_running=keep_running)
+        return SocketClient(
+            socket_in=stdio,
+            socket_out=stdio,
+            socket_err=stderr,
+            raw=raw,
+            keep_running=keep_running
+        )
 
 
 def catch_api_error(fn, success_message=None):
