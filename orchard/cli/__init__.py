@@ -28,6 +28,8 @@ def main():
         log.error("\nAborting.")
         exit(1)
     except HTTPError as e:
+        log.debug("HTTP error", exc_info=sys.exc_info())
+
         if e.json and e.json.get('detail'):
             log.error("API error: %s", e.json['detail'])
             log.error("See %s for more detail", command.log_file_path)
