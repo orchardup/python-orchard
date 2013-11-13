@@ -7,7 +7,6 @@ import fcntl
 import os
 import termios
 import threading
-import time
 import errno
 
 import logging
@@ -67,8 +66,8 @@ class SocketClient:
         if self.socket_err is not None:
             recv_threads.append(self.start_background_thread(target=self.recv_ws, args=(self.socket_err, sys.stderr)))
 
-        while any(t.is_alive() for t in recv_threads):
-            time.sleep(1)
+        for t in recv_threads:
+            t.join()
 
     def start_background_thread(self, **kwargs):
         thread = threading.Thread(**kwargs)
