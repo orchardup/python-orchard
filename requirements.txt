@@ -1,4 +1,0 @@
--e git+https://github.com/aanand/docker-py.git@327eb9000ad8c4ba8da6dd0faf2f37c34cc28e38#egg=docker-py
-docopt==0.6.1
-requests==2.0.1
-texttable==0.8.1
