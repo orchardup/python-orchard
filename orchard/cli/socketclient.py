@@ -67,7 +67,8 @@ class SocketClient:
         if self.socket_err is not None:
             self.start_recv_thread(self.socket_err, sys.stderr)
 
-        self.alive_check()
+        while any(t.is_alive() for t in self.recv_threads):
+            time.sleep(1)
 
     def start_send_thread(self, *args):
         thread = threading.Thread(target=self.send_ws, args=args)
@@ -111,13 +112,6 @@ class SocketClient:
                             break
                         else:
                             raise e
-
-    def alive_check(self):
-        while True:
-            time.sleep(1)
-
-            if not any(t.is_alive() for t in self.recv_threads):
-                break
 
     def destroy(self):
         if self.settings is not None:
