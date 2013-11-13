@@ -24,11 +24,9 @@ class SocketClient:
         self.socket_in = socket_in
         self.socket_out = socket_out
         self.socket_err = socket_err
-
         self.raw = raw
 
         self.stdin_fileno = sys.stdin.fileno()
-        self.recv_threads = []
 
     def __enter__(self):
         self.create()
@@ -59,27 +57,24 @@ class SocketClient:
 
     def run(self):
         if self.socket_in is not None:
-            self.start_send_thread(self.socket_in, sys.stdin)
+            self.start_background_thread(target=self.send_ws, args=(self.socket_in, sys.stdin))
+
+        recv_threads = []
 
         if self.socket_out is not None:
-            self.start_recv_thread(self.socket_out, sys.stdout)
+            recv_threads.append(self.start_background_thread(target=self.recv_ws, args=(self.socket_out, sys.stdout)))
 
         if self.socket_err is not None:
-            self.start_recv_thread(self.socket_err, sys.stderr)
+            recv_threads.append(self.start_background_thread(target=self.recv_ws, args=(self.socket_err, sys.stderr)))
 
-        while any(t.is_alive() for t in self.recv_threads):
+        while any(t.is_alive() for t in recv_threads):
             time.sleep(1)
 
-    def start_send_thread(self, *args):
-        thread = threading.Thread(target=self.send_ws, args=args)
+    def start_background_thread(self, **kwargs):
+        thread = threading.Thread(**kwargs)
         thread.daemon = True
         thread.start()
-
-    def start_recv_thread(self, *args):
-        thread = threading.Thread(target=self.recv_ws, args=args)
-        thread.daemon = True
-        thread.start()
-        self.recv_threads.append(thread)
+        return thread
 
     def recv_ws(self, socket, stream):
         try:
