@@ -421,14 +421,11 @@ class DockerCommand(Command):
             ws=True,
         )
 
-        keep_running = lambda: self.docker.inspect_container(container_id)['State']['Running']
-
         return SocketClient(
             socket_in=stdio,
             socket_out=stdio,
             socket_err=stderr,
             raw=raw,
-            keep_running=keep_running
         )
 
 

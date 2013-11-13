@@ -19,17 +19,11 @@ class SocketClient:
         socket_in=None,
         socket_out=None,
         socket_err=None,
-        keep_running=None,
         raw=True,
     ):
         self.socket_in = socket_in
         self.socket_out = socket_out
         self.socket_err = socket_err
-
-        if keep_running is None:
-            self.keep_running = lambda: True
-        else:
-            self.keep_running = keep_running
 
         self.raw = raw
 
@@ -123,9 +117,6 @@ class SocketClient:
             time.sleep(1)
 
             if not any(t.is_alive() for t in self.recv_threads):
-                break
-
-            if not self.keep_running():
                 break
 
     def destroy(self):
