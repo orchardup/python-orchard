@@ -1,18 +1,13 @@
 import os
 
 from .client import Client
-from .errors import Unauthorized, BadRequest, AuthenticationFailed
+from .errors import BadRequest, AuthenticationFailed
 
 
 def with_token(token):
     client = Client(base_url(), docker_host())
-
-    try:
-        client.token = token
-        client.bootstrap()
-        return client
-    except Unauthorized:
-        raise AuthenticationFailed()
+    client.token = token
+    return client
 
 
 def with_username_and_password(username, password):
@@ -20,7 +15,6 @@ def with_username_and_password(username, password):
 
     try:
         client.token = client.request("POST", "/signin", data={"username": username, "password": password}, quiet=True)["token"]
-        client.bootstrap()
         return client
     except BadRequest:
         raise AuthenticationFailed()

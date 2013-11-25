@@ -20,11 +20,7 @@ class Client(object):
 
     @property
     def apps(self):
-        return AppCollection(client=self, url=self.apps_url)
-
-    def bootstrap(self):
-        api_info = self.request("GET", "/")
-        self.apps_url = api_info["apps_url"]
+        return AppCollection(client=self, url="/apps")
 
     def docker(self, app_name):
         docker_url = self.docker_host % app_name
