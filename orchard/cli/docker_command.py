@@ -272,6 +272,7 @@ class DockerCommand(Command):
             -p PORT     Expose a container's port to the host. In the format
                         public:private. If the public port is omitted, a random
                         port will be assigned.
+            --privileged  Give extended privileges to this container
             -t          Allocate a pseudo-tty
             -v PATH     Mount a volume at the specified path (e.g. /var/lib/mysql)
         """
@@ -317,6 +318,7 @@ class DockerCommand(Command):
             tty=options['-t'],
             environment=options['-e'],
             ports=ports,
+            privileged=options['--privileged'],
             volumes=volumes,
             mem_limit=mem_limit
         )
