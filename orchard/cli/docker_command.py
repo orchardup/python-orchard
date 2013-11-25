@@ -438,6 +438,7 @@ def catch_api_error(fn, success_message=None):
         if success_message:
             sys.stderr.write("%s\n" % success_message)
     except APIError, e:
+        log.debug("Docker API error", exc_info=sys.exc_info())
         sys.stderr.write("%s\n" % (e.explanation or e))
 
 
