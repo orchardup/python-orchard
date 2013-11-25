@@ -1,7 +1,6 @@
 import logging
 import requests
 import orchard
-import os
 import urlparse
 
 from .docker_client import DockerClient

@@ -1,7 +1,7 @@
 import os
 
 from .client import Client
-from .errors import ClientError, Unauthorized, BadRequest, AuthenticationFailed
+from .errors import Unauthorized, BadRequest, AuthenticationFailed
 
 
 def with_token(token):

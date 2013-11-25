@@ -5,7 +5,6 @@ from getpass import getpass
 from .. import api
 from ..api.errors import AuthenticationFailed
 
-from .errors import UserError
 from .utils import mkdir
 
 import logging
