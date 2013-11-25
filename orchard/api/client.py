@@ -22,6 +22,9 @@ class Client(object):
     def apps(self):
         return AppCollection(client=self, url="/apps")
 
+    def customer_data(self):
+        return self.request("GET", "/customers/me")
+
     def docker(self, app_name):
         docker_url = self.docker_host % app_name
 
