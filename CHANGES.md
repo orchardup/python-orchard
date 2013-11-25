@@ -1,6 +1,13 @@
 Change log
 ==========
 
+1.0.5 – 2013-11-25
+------------------
+
+ - Output stdout and stderr to correct streams when attaching
+ - Many fixes to make `docker attach` faster and more reliable
+ - Add `--privileged`` flag to `docker run`
+
 1.0.4 — 2013-11-06
 ------------------
 
