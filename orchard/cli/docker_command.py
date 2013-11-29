@@ -20,7 +20,7 @@ class DockerCommand(Command):
     Usage: docker [-a APP] COMMAND [ARGS...]
 
     Options:
-        -a APP, --app APP    Specify the Orchard app to run against (required)
+        -a APP, --app APP    Specify the Orchard app to run against
 
     Commands:
         attach           Attach to a running container
