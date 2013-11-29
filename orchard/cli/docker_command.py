@@ -51,10 +51,7 @@ class DockerCommand(Command):
         app_name = global_options['--app'] or options['--app']
 
         if app_name is None:
-            line = map(quote, sys.argv[2:])
-            error = "Please specify an app name thus: orchard -a APP docker %s" % " ".join(line)
-            sys.stderr.write("%s\n" % error)
-            exit(1)
+            app_name = 'default_%s' % self.api.username
 
         self.docker = self.api.docker(app_name=app_name)
 
