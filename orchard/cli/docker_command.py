@@ -185,7 +185,7 @@ class DockerCommand(Command):
         """
         Replace a running container with a new one, using the specified image
 
-        Usage: replace [options] [-e VAR=VAL...] CONTAINER IMAGE [COMMAND] [ARG...]
+        Usage: replace [options] [-e VAR=VAL...] [-p HOST:CONTAINER...] CONTAINER IMAGE [COMMAND] [ARG...]
 
         Options:
             -e VAR=VAL  Set an environment variable (can be used multiple times)
@@ -247,18 +247,18 @@ class DockerCommand(Command):
 
     def _get_ports(self, options):
         if options['-p']:
-            if re.search('^\d+(:\d+)?$', options['-p']):
-                return [options['-p']]
-            else:
-                sys.stderr.write("The -p argument must be of the format XXX or XXX:YYY.\n")
-                exit(1)
+            for port in options['-p']:
+                if not re.search('^\d+(:\d+)?$', port):
+                    sys.stderr.write("The -p argument must be of the format XXX or XXX:YYY.\n")
+                    exit(1)
+            return options['-p']
 
 
     def run(self, options):
         """
         Run a command in a new container.
 
-        Usage: run [options] [-e VAR=VAL...] IMAGE [COMMAND] [ARG...]
+        Usage: run [options] [-e VAR=VAL...] [-p HOST:CONTAINER...] IMAGE [COMMAND] [ARG...]
 
         Options:
             -d          Detached mode: Run container in the background, print new container id
