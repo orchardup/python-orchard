@@ -1,6 +1,12 @@
 Change log
 ==========
 
+1.0.6 (2013-12-02)
+------------------
+
+ - Make app name optional
+ - Improve speed of commands by removing an HTTP request
+
 1.0.5 (2013-11-25)
 ------------------
 
