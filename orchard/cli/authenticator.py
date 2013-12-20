@@ -20,7 +20,9 @@ class Authenticator(object):
 
     def authenticate(self):
         if 'ORCHARD_API_KEY' in os.environ:
-            return api.with_token(os.environ['ORCHARD_API_KEY'])
+            client = api.with_token(os.environ['ORCHARD_API_KEY'])
+            client.username = client.customer_data()["username"]
+            return client
 
         loaded_data = self.load_user_data()
 
