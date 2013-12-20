@@ -1,6 +1,11 @@
 Change log
 ==========
 
+1.0.8 (2013-12-20)
+------------------
+
+ - Use ORCHARD_API_KEY environment variable to authenticate, if present
+
 1.0.7 (2013-12-02)
 ------------------
 
