@@ -19,6 +19,9 @@ class Authenticator(object):
         self.token_file = os.path.join(token_dir, url_hash)
 
     def authenticate(self):
+        if 'ORCHARD_API_KEY' in os.environ:
+            return api.with_token(os.environ['ORCHARD_API_KEY'])
+
         loaded_data = self.load_user_data()
 
         if loaded_data:
