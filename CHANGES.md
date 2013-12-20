@@ -1,6 +1,11 @@
 Change log
 ==========
 
+1.0.9 (2013-12-20)
+------------------
+
+ - Bugfix: Populate username when getting API key from environment variable
+
 1.0.8 (2013-12-20)
 ------------------
 
