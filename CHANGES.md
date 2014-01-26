@@ -1,6 +1,11 @@
 Change log
 ==========
 
+1.0.10 (2014-01-26)
+------------------
+
+ - Vendorise docker-py to fix installation problems.
+
 1.0.9 (2013-12-20)
 ------------------
 
