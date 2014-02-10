@@ -3,33 +3,25 @@ import requests
 import orchard
 import urlparse
 
-from .docker_client import DockerClient
-from .models.app import AppCollection
+from .models.host import HostCollection
 from .errors import HTTPError
 from .utils import request_to_curl_command
 
 log = logging.getLogger(__name__)
 
 class Client(object):
-    def __init__(self, base_url, docker_host):
+    def __init__(self, base_url):
         if base_url.endswith("/"):
             base_url = base_url[:-1]
 
         self.base_url = base_url
-        self.docker_host = docker_host
 
     @property
-    def apps(self):
-        return AppCollection(client=self, url="/apps")
+    def hosts(self):
+        return HostCollection(client=self, url="/hosts")
 
     def customer_data(self):
         return self.request("GET", "/customers/me")
-
-    def docker(self, app_name):
-        docker_url = self.docker_host % app_name
-
-        log.debug("Connecting to Docker API at %s", docker_url)
-        return DockerClient(base_url=docker_url, auth_token=self.token, version="1.5")
 
     def request(self, method, path_or_url, quiet=False, headers=None, **kwargs):
         if headers is None:
