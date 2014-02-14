@@ -1,4 +1,4 @@
-from ..packages import docker
+from .packages import docker
 import os.path
 
 class DockerClient(docker.Client):
