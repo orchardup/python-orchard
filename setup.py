@@ -33,14 +33,8 @@ setup(
     package_data={},
     include_package_data=True,
     install_requires=[
-        'docopt==0.6.1',
         'requests==2.0.1',
         'six==1.3.0',
-        'texttable==0.8.1',
         'websocket-client==0.11.0',
     ],
-    entry_points="""
-    [console_scripts]
-    orchard=orchard.cli:main
-    """,
 )
