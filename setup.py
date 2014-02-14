@@ -33,8 +33,8 @@ setup(
     package_data={},
     include_package_data=True,
     install_requires=[
-        'requests==2.0.1',
-        'six==1.3.0',
+        'requests==2.2.1',
+        'six>=1.3.0',
         'websocket-client==0.11.0',
     ],
 )
