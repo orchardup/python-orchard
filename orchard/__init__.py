@@ -3,7 +3,7 @@ import os
 from .client import Client
 from .errors import BadRequest, AuthenticationFailed
 
-__version__ = '1.0.10'
+__version__ = '2.0.0'
 
 def with_token(token):
     client = Client(base_url())
@@ -22,4 +22,4 @@ def with_username_and_password(username, password):
 
 
 def base_url():
-    return os.environ.get('ORCHARD_API_URL', 'https://orchardup.com/api/v1')
+    return os.environ.get('ORCHARD_API_URL', 'https://orchardup.com/api/v2')

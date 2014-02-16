@@ -31,7 +31,7 @@ class Client(object):
 
         if hasattr(self, 'token'):
             headers["Authorization"] = "Token %s" % self.token
-            headers["User-Agent"] = "orchard/%s" % orchard.__version__
+            headers["User-Agent"] = "python-orchard/%s" % orchard.__version__
 
         req = requests.Request(method, url, headers=headers, **kwargs).prepare()
 
