@@ -1,6 +1,15 @@
 Change log
 ==========
 
+2.0.0 (2014-02-16)
+------------------
+
+This package is no longer a CLI for Orchard – that has moved to the [Go client](https://github.com/orchardup/go-orchard).
+
+ - Updated API to version 2. This removes containers and moves apps to hosts.
+ - Moved `orchard.api` to the top level `orchard` package.
+ - Removed CLI
+
 1.0.10 (2014-01-26)
 ------------------
 
