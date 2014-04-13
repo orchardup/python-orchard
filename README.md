@@ -61,7 +61,7 @@ To get a [docker-py] instance for a host, call `host.docker()`:
 
 See the [docker-py] README for a full list of methods.
 
-[Orchard]: https://orchardup.com
+[Orchard]: https://www.orchardup.com
 [docker-py]: https://github.com/dotcloud/docker-py
-[CLI docs]: https://orchardup.com/docs/cli
-[Orchard API docs]: https://orchardup.com/docs/api
+[CLI docs]: https://www.orchardup.com/docs/cli
+[Orchard API docs]: https://www.orchardup.com/docs/api
