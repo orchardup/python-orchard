@@ -3,7 +3,7 @@ import os
 from .client import Client
 from .errors import BadRequest, AuthenticationFailed
 
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 
 def with_token(token):
     client = Client(base_url())
