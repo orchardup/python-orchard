@@ -22,4 +22,4 @@ def with_username_and_password(username, password):
 
 
 def base_url():
-    return os.environ.get('ORCHARD_API_URL', 'https://orchardup.com/api/v2')
+    return os.environ.get('ORCHARD_API_URL', 'https://api.orchardup.com/v2')

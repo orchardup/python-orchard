@@ -26,7 +26,7 @@ setup(
     name='orchard',
     version=find_version("orchard", "__init__.py"),
     description='',
-    url='https://orchardup.com',
+    url='https://www.orchardup.com',
     author='Orchard Laboratories Ltd.',
     author_email='hello@orchardup.com',
     packages=find_packages(),
