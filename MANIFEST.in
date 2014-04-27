@@ -1,3 +1,4 @@
-include LICENSE
 include *.md
+include orchard/certs/*
+include LICENSE
 include requirements.txt
