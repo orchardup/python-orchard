@@ -27,7 +27,11 @@ class Host(Model):
         return os.path.expanduser('~/.orchard/host-keys')
 
     def _host_ca_path(self):
-        return os.path.abspath(os.path.join(os.path.dirname(__file__), '../certs/host-ca.pem'))
+        host_ca_path = os.environ.get(
+            'ORCHARD_HOST_CA',
+            os.path.join(os.path.dirname(__file__), '../certs/host-ca.pem')
+        )
+        return os.path.abspath(host_ca_path)
 
     def _client_key_path(self):
         return os.path.join(self._keys_path(), '%s.key' % self.id)
